@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>The Least Popular NBA Players Among Their Peers</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<style>
+:root {
+  --bg-dark: #05060c;
+  --card-radius: 16px;
+  --text-main: #f3eaea;
+
+  /* RED THEME */
+  --accent: #ff3b3b;
+  --gold: #ffcc33;
+
+  --panel: rgba(255,255,255,0.04);
+  --panel-border: rgba(255,255,255,0.08);
+  --shadow: 0 26px 70px rgba(0,0,0,0.55);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(1200px 600px at 70% -200px, rgba(90,0,0,0.92) 0%, transparent 60%),
+    radial-gradient(900px 520px at 10% 0%, rgba(40,0,0,0.90) 0%, transparent 55%),
+    radial-gradient(900px 560px at 85% 30%, rgba(255,0,0,0.12) 0%, transparent 55%),
+    var(--bg-dark);
+  color: var(--text-main);
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.wrapper {
+  max-width: 1100px;
+  margin: 42px auto 60px;
+  padding: 0 22px;
+}
+
+h1 {
+  text-align: center;
+  font-size: clamp(28px, 4vw, 44px);
+  letter-spacing: 1px;
+  margin: 0 0 22px;
+  font-weight: 900;
+}
+h1 span { color: var(--accent); }
+
+.grid {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 24px;
+  padding: clamp(12px, 2vw, 18px);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: clamp(8px, 1.4vw, 14px);
+  padding: clamp(8px, 1.4vw, 12px);
+  border-radius: 18px;
+  margin-bottom: clamp(10px, 1.6vw, 14px);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.30);
+}
+
+/* Red gradient tiers */
+.row-1 { background: linear-gradient(90deg, #ff4d4d, #d91f1f); }
+.row-2 { background: linear-gradient(90deg, #8a1010, #4d0505); }
+
+.card {
+  background: rgba(0,0,0,0.35);
+  border-radius: var(--card-radius);
+  padding: clamp(10px, 1.4vw, 14px);
+  text-align: center;
+  position: relative;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+  transition: 0.3s;
+}
+
+/* Glow for top 3 players */
+.card.top-3 {
+  box-shadow:
+    0 0 15px var(--gold),
+    0 0 35px var(--accent),
+    inset 0 0 0 1px rgba(255,255,255,0.08);
+}
+
+.rank {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0,0,0,0.55);
+  padding: 3px 7px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 800;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 10px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.12), 0 10px 18px rgba(0,0,0,0.35);
+}
+.avatar img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.name {
+  font-size: 14px;
+  font-weight: 800;
+  margin: 0 0 4px;
+}
+
+.team {
+  font-size: 11px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: rgba(233,244,241,0.72);
+}
+
+.footer {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,0.15);
+  text-align: center;
+  font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+  <h1>The Least <span>Popular NBA Players</span> Among Their Peers</h1>
+
+  <div class="grid">
+    <div id="grid"></div>
+
+    <div class="footer">
+      Ranked by % of NBA teammates who follow them on Instagram<br>
+      Source: Instagram | Headshots: ESPN
+    </div>
+  </div>
+</div>
+
+<script>
+const PLAYERS = [
+  { rank:1, name:"Jamal Murray", team:"Denver Nuggets", espnId:3936299 },
+  { rank:2, name:"Kevon Looney", team:"New Orleans Pelicans", espnId:3155535 },
+  { rank:3, name:"Brandin Podziemski", team:"Golden State Warriors", espnId:4709138 },
+  { rank:4, name:"Jerami Grant", team:"Portland Trail Blazers", espnId:2991070 },
+  { rank:5, name:"Matisse Thybulle", team:"Portland Trail Blazers", espnId:3907498 },
+  { rank:6, name:"Deandre Ayton", team:"Los Angeles Lakers", espnId:4278129 },
+  { rank:7, name:"TJ McConnell", team:"Indiana Pacers", espnId:2530530 },
+  { rank:8, name:"Kawhi Leonard", team:"Los Angeles Clippers", espnId:6450 },
+  { rank:9, name:"Lauri Markkanen", team:"Utah Jazz", espnId:4066336 },
+  { rank:10, name:"Cody Martin", team:"Indiana Pacers", espnId:3138161 }
+];
+
+function headshotUrl(id){
+  return `https://a.espncdn.com/i/headshots/nba/players/full/${id}.png`;
+}
+
+function render(){
+  const grid = document.getElementById("grid");
+
+  for(let r = 0; r < 2; r++){
+    const row = document.createElement("div");
+    row.className = r === 0 ? "row row-1" : "row row-2";
+
+    const slice = PLAYERS.slice(r*5, r*5 + 5);
+
+    for(const p of slice){
+      const card = document.createElement("div");
+      card.className = p.rank <= 3 ? "card top-3" : "card";
+
+      card.innerHTML = `
+        <div class="rank">#${p.rank}</div>
+        <div class="avatar">
+          <img src="${headshotUrl(p.espnId)}" alt="${p.name}">
+        </div>
+        <div class="name">${p.name}</div>
+        <div class="team">${p.team.toUpperCase()}</div>
+      `;
+
+      row.appendChild(card);
+    }
+
+    grid.appendChild(row);
+  }
+}
+
+render();
+</script>
+</body>
+</html>
