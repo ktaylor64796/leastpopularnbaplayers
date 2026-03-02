@@ -147,7 +147,8 @@ h1 span { color: var(--accent); }
     <div id="grid"></div>
 
     <div class="footer">
-      Ranked by % of NBA teammates who follow them on Instagram<br>
+      Ranked by # of NBA players who follow them on Instagram<br>
+      When number of NBA followers tied, % of teammate followers were taken into account and overall follower size.<br>
       Source: Instagram | Headshots: ESPN
     </div>
   </div>
@@ -155,16 +156,16 @@ h1 span { color: var(--accent); }
 
 <script>
 const PLAYERS = [
-  { rank:1, name:"Jabari Smith Jr", team:"Houston Rockets", espnId:4432639 },
-  { rank:2, name:"Nikola Jokic", team:"Denver Nuggets", espnId:3112335 },
-  { rank:3, name:"Andre Drummond", team:"Philadelphia 76ers", espnId:6585 },
-  { rank:4, name:"Jamal Murray", team:"Denver Nuggets", espnId:3936299 },
-  { rank:5, name:"Jalen Williams", team:"Oklahoma City Thunder", espnId:4593803 },
-  { rank:6, name:"Kenrich Williams", team:"Oklahoma City Thunder", espnId:3133626 },
-  { rank:7, name:"Brook Lopez", team:"Milwaukee Bucks", espnId:3448 },
-  { rank:8, name:"Kawhi Leonard", team:"Los Angeles Clippers", espnId:6450 },
-  { rank:9, name:"Cody Martin", team:"Indiana Pacers", espnId:3138161 },
-  { rank:10, name:"Keegan Murray", team:"Sacramento Kings", espnId:4594327 }
+  { rank:1, name:"Jabari Smith Jr", team:"Houston Rockets", espnId:4432639, nbaFollowers:0 },
+  { rank:2, name:"Nikola Jokic", team:"Denver Nuggets", espnId:3112335, nbaFollowers:0 },
+  { rank:3, name:"Andre Drummond", team:"Philadelphia 76ers", espnId:6585, nbaFollowers:0 },
+  { rank:4, name:"Jamal Murray", team:"Denver Nuggets", espnId:3936299, nbaFollowers:0 },
+  { rank:5, name:"Jalen Williams", team:"Oklahoma City Thunder", espnId:4593803, nbaFollowers:1 },
+  { rank:6, name:"Kenrich Williams", team:"Oklahoma City Thunder", espnId:3133626, nbaFollowers:2 },
+  { rank:7, name:"Brook Lopez", team:"Milwaukee Bucks", espnId:3448, nbaFollowers:7 },
+  { rank:8, name:"Kawhi Leonard", team:"Los Angeles Clippers", espnId:6450, nbaFollowers:8 },
+  { rank:9, name:"Cody Martin", team:"Indiana Pacers", espnId:3138161, nbaFollowers:9 },
+  { rank:10, name:"Keegan Murray", team:"Sacramento Kings", espnId:4594327, nbaFollowers:9 }
 ];
 
 function headshotUrl(id){
@@ -191,6 +192,9 @@ function render(){
         </div>
         <div class="name">${p.name}</div>
         <div class="team">${p.team.toUpperCase()}</div>
+        <div style="margin-top:6px; font-size:12px; font-weight:700;">
+          ${p.nbaFollowers} NBA PLAYER FOLLOWERS
+        </div>
       `;
 
       row.appendChild(card);
